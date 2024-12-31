@@ -14,7 +14,7 @@ class SimpleType implements TypeNode
 {
     public function __construct(
         public readonly string|null $name,
-        public readonly DataType $type,
+        public readonly DataType|null $type,
         public readonly Restriction|null $restriction = null
     ) {
     }
@@ -30,7 +30,7 @@ class SimpleType implements TypeNode
 
         if ($this->restriction) {
             $type->appendChild($this->restriction->toNode($document));
-        } else {
+        } elseif ($this->type) {
             $type->setAttribute('type', $this->type->type());
         }
 

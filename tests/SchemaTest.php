@@ -9,6 +9,7 @@ use DMT\XsdBuilder\Schema;
 use DOMDocument;
 use DOMException;
 use DOMXPath;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
 class SchemaTest extends TestCase
@@ -22,10 +23,10 @@ class SchemaTest extends TestCase
         $complexType->addElement(new Element('name', DataType::String));
         $complexType->addElement(new Element('password', DataType::String));
 
-        $schema = new Schema();
+        $schema = new Schema($document);
         $schema->addType($complexType);
         $schema->addNode(new Element('user', 'userType'));
-        $schema->renderSchema($document);
+        $schema->renderSchema();
 
         $this->assertCount(1, $xpath->query('//*[local-name() = "complexType" and @name="userType"]'));
         $this->assertCount(1, $xpath->query('//*[local-name() = "element" and @type="userType"]'));
@@ -40,21 +41,24 @@ class SchemaTest extends TestCase
         $complexType->addElement(new Element('name', DataType::String));
         $complexType->addElement(new Element('password', DataType::String));
 
-        $schema = new Schema();
+        $schema = new Schema($document);
         $schema->addNode(new Element('user', $complexType));
-        $schema->renderSchema($document);
+        $schema->renderSchema();
 
         $this->assertCount(1, $xpath->query('//*[local-name() = "element" and @name="user"]'));
         $this->assertCount(1, $xpath->query('//*[@name="user"]/*[local-name() = "complexType"]'));
     }
 
+    #[RunInSeparateProcess]
     public function testInvalidSchema(): void
     {
+        libxml_use_internal_errors(true);
+
         $this->expectException(DOMException::class);
 
-        $schema = new Schema();
+        $schema = new Schema(new DOMDocument());
         $schema->addNode(new Element('id', DataType::String));
         $schema->addNode(new Element('id', DataType::Integer));
-        $schema->renderSchema(new DOMDocument());
+        $schema->renderSchema();
     }
 }

@@ -6,6 +6,7 @@ namespace DMT\XsdBuilder\Nodes;
 
 use DMT\XsdBuilder\DataType;
 use DMT\XsdBuilder\Schema;
+use DMT\XsdBuilder\UseType;
 use DOMDocument;
 use DOMElement;
 use DOMException;
@@ -16,7 +17,7 @@ class Attribute implements Node
         private readonly string  $name,
         private readonly DataType $type,
         private readonly string|null $default = null,
-        private readonly string|null $use = null
+        private readonly UseType|null $use = null
     ) {
     }
 
@@ -32,7 +33,7 @@ class Attribute implements Node
         }
 
         if ($this->use) {
-            $attribute->setAttribute('use', $this->use);
+            $attribute->setAttribute('use', $this->use->value);
         }
 
         return $attribute;

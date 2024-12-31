@@ -6,6 +6,7 @@ use DMT\XsdBuilder\Nodes\Node;
 use DMT\XsdBuilder\Nodes\TypeNode;
 use DOMDocument;
 use DOMException;
+use InvalidArgumentException;
 
 class Schema
 {
@@ -15,6 +16,16 @@ class Schema
     private array $types = [];
     /** @var array<int, Node> */
     private array $nodes = [];
+
+    public function __construct(
+        private DOMDocument $document
+    ) {
+    }
+
+    public function getDocument(): DOMDocument
+    {
+        return $this->document;
+    }
 
     public function addType(TypeNode $type): self
     {
@@ -31,22 +42,27 @@ class Schema
     }
 
     /** @throws DOMException */
-    public function renderSchema(DOMDocument $document): void
+    public function renderSchema(): void
     {
-        $schema = $document->createElementNS(self::namespace, 'xs:schema');
+        $schema = $this->document->firstChild;
 
-        $document->formatOutput = true;
-        $document->appendChild($schema);
+        if (!$schema) {
+            $schema = $this->document->appendChild($this->document->createElementNS(self::namespace, 'xs:schema'));
+        }
+
+        if ($schema->localName !== 'schema' || $schema->namespaceURI !== self::namespace) {
+            throw new InvalidArgumentException('Invalid schema provided');
+        }
 
         foreach ($this->types as $type) {
-            $schema->appendChild($type->toNode($document));
+            $schema->appendChild($type->toNode($this->document));
         }
 
         foreach ($this->nodes as $node) {
-            $schema->appendChild($node->toNode($document));
+            $schema->appendChild($node->toNode($this->document));
         }
 
-        if (!$document->schemaValidate(__DIR__ . '/../docs/schema.xsd')) {
+        if (!$this->document->schemaValidate(__DIR__ . '/../res/schema.xsd')) {
             throw new DOMException('Invalid XML schema');
         }
     }
