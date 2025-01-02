@@ -1,6 +1,6 @@
 <?php
 
-namespace DMT\XsdBuilder;
+namespace DMT\XsdBuilder\Types;
 
 enum UseType: string
 {

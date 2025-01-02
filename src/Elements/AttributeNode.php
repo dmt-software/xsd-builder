@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace DMT\XsdBuilder\Nodes;
+namespace DMT\XsdBuilder\Elements;
 
-use DMT\XsdBuilder\DataType;
-use DMT\XsdBuilder\Schema;
-use DMT\XsdBuilder\UseType;
+use DMT\XsdBuilder\Types\DataType;
+use DMT\XsdBuilder\Types\UseType;
 use DOMDocument;
 use DOMElement;
 use DOMException;
 
-class Attribute implements Node
+class AttributeNode implements Node
 {
     public function __construct(
         private readonly string  $name,
-        private readonly DataType $type,
+        private readonly DataType|SimpleType|string $type,
         private readonly string|null $default = null,
         private readonly UseType|null $use = null
     ) {
@@ -26,7 +25,12 @@ class Attribute implements Node
     {
         $attribute = $document->createElementNS(Schema::namespace, 'attribute');
         $attribute->setAttribute('name', $this->name);
-        $attribute->setAttribute('type', $this->type->type());
+
+        if ($this->type instanceof SimpleType) {
+            $attribute->appendChild($this->type->toNode($document));
+        } else {
+            $attribute->setAttribute('type', $this->type instanceof DataType ? $this->type->type() : $this->type);
+        }
 
         if ($this->default) {
             $attribute->setAttribute('default', $this->default);

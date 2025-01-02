@@ -1,9 +1,7 @@
 <?php
 
-namespace DMT\XsdBuilder;
+namespace DMT\XsdBuilder\Elements;
 
-use DMT\XsdBuilder\Nodes\Node;
-use DMT\XsdBuilder\Nodes\TypeNode;
 use DOMDocument;
 use DOMException;
 use InvalidArgumentException;
@@ -12,7 +10,7 @@ class Schema
 {
     public const namespace = 'http://www.w3.org/2001/XMLSchema';
 
-    /** @var array<int, TypeNode> */
+    /** @var array<int, Type> */
     private array $types = [];
     /** @var array<int, Node> */
     private array $nodes = [];
@@ -27,7 +25,7 @@ class Schema
         return $this->document;
     }
 
-    public function addType(TypeNode $type): self
+    public function addType(Type $type): self
     {
         $this->types[] = $type;
 
@@ -62,7 +60,7 @@ class Schema
             $schema->appendChild($node->toNode($this->document));
         }
 
-        if (!$this->document->schemaValidate(__DIR__ . '/../res/schema.xsd')) {
+        if (!$this->document->schemaValidate(__DIR__ . '/../../res/schema.xsd')) {
             throw new DOMException('Invalid XML schema');
         }
     }

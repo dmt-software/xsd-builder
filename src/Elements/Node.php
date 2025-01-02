@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace DMT\XsdBuilder\Nodes;
+namespace DMT\XsdBuilder\Elements;
 
 use DOMDocument;
 use DOMElement;
 use DOMException;
 
-interface TypeNode
+interface Node
 {
     /**
-     * Get type as element.
+     * Get element/attribute as element.
      *
      * @throws DOMException on error creating element
      */

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DMT\XsdBuilder;
+namespace DMT\XsdBuilder\Types;
 
 enum ListType: string
 {

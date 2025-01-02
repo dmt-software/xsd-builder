@@ -1,11 +1,11 @@
 <?php
 
-namespace DMT\Test\XsdBuilder;
+namespace DMT\Test\XsdBuilder\Elements;
 
-use DMT\XsdBuilder\DataType;
-use DMT\XsdBuilder\Nodes\ComplexType;
-use DMT\XsdBuilder\Nodes\Element;
-use DMT\XsdBuilder\Schema;
+use DMT\XsdBuilder\Elements\ComplexType;
+use DMT\XsdBuilder\Elements\ElementNode;
+use DMT\XsdBuilder\Elements\Schema;
+use DMT\XsdBuilder\Types\DataType;
 use DOMDocument;
 use DOMException;
 use DOMXPath;
@@ -20,12 +20,12 @@ class SchemaTest extends TestCase
         $xpath = new DOMXPath($document);
 
         $complexType = new ComplexType('userType');
-        $complexType->addElement(new Element('name', DataType::String));
-        $complexType->addElement(new Element('password', DataType::String));
+        $complexType->addElement(new ElementNode('name', DataType::String));
+        $complexType->addElement(new ElementNode('password', DataType::String));
 
         $schema = new Schema($document);
         $schema->addType($complexType);
-        $schema->addNode(new Element('user', 'userType'));
+        $schema->addNode(new ElementNode('user', 'userType'));
         $schema->renderSchema();
 
         $this->assertCount(1, $xpath->query('//*[local-name() = "complexType" and @name="userType"]'));
@@ -38,11 +38,11 @@ class SchemaTest extends TestCase
         $xpath = new DOMXPath($document);
 
         $complexType = new ComplexType();
-        $complexType->addElement(new Element('name', DataType::String));
-        $complexType->addElement(new Element('password', DataType::String));
+        $complexType->addElement(new ElementNode('name', DataType::String));
+        $complexType->addElement(new ElementNode('password', DataType::String));
 
         $schema = new Schema($document);
-        $schema->addNode(new Element('user', $complexType));
+        $schema->addNode(new ElementNode('user', $complexType));
         $schema->renderSchema();
 
         $this->assertCount(1, $xpath->query('//*[local-name() = "element" and @name="user"]'));
@@ -57,8 +57,8 @@ class SchemaTest extends TestCase
         $this->expectException(DOMException::class);
 
         $schema = new Schema(new DOMDocument());
-        $schema->addNode(new Element('id', DataType::String));
-        $schema->addNode(new Element('id', DataType::Integer));
+        $schema->addNode(new ElementNode('id', DataType::String));
+        $schema->addNode(new ElementNode('id', DataType::Integer));
         $schema->renderSchema();
     }
 }

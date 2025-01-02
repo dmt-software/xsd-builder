@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace DMT\XsdBuilder\Restrictions;
 
-use DMT\XsdBuilder\DataType;
-use DMT\XsdBuilder\Nodes\TypeNode;
-use DMT\XsdBuilder\Schema;
+use DMT\XsdBuilder\Elements\Schema;
+use DMT\XsdBuilder\Types\DataType;
 use DOMDocument;
 use DOMElement;
 

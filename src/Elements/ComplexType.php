@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace DMT\XsdBuilder\Nodes;
+namespace DMT\XsdBuilder\Elements;
 
-use DMT\XsdBuilder\ListType;
-use DMT\XsdBuilder\Schema;
+use DMT\XsdBuilder\Types\ListType;
 use DOMDocument;
 use DOMElement;
 
-class ComplexType implements TypeNode
+class ComplexType implements Type
 {
-    /** @var array<int, TypeNode> */
+    /** @var array<int, Type> */
     private array $elements = [];
-    /** @var array<int, Attribute> */
+    /** @var array<int, AttributeNode> */
     private array $attributes = [];
 
     public function __construct(
@@ -22,10 +21,16 @@ class ComplexType implements TypeNode
     ) {
     }
 
+    /** @inheritDoc */
+    public function getNodeName(): string|null
+    {
+        return $this->name;
+    }
+
     /**
      * Add element to complex type.
      */
-    public function addElement(Element $element): self
+    public function addElement(ElementNode $element): self
     {
         $this->elements[] = $element;
 
@@ -35,7 +40,7 @@ class ComplexType implements TypeNode
     /**
      * Add attribute to complex type.
      */
-    public function addAttribute(Attribute $attribute): self
+    public function addAttribute(AttributeNode $attribute): self
     {
         $this->attributes[] = $attribute;
 

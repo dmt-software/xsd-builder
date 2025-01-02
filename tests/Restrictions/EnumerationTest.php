@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DMT\Test\XsdBuilder\Restrictions;
 
-use DMT\XsdBuilder\DataType;
 use DMT\XsdBuilder\Restrictions\Enumeration;
+use DMT\XsdBuilder\Types\DataType;
 use PHPUnit\Framework\TestCase;
 
 class EnumerationTest extends TestCase

@@ -2,21 +2,26 @@
 
 declare(strict_types=1);
 
-namespace DMT\XsdBuilder\Nodes;
+namespace DMT\XsdBuilder\Elements;
 
-use DMT\XsdBuilder\DataType;
 use DMT\XsdBuilder\Restrictions\Restriction;
-use DMT\XsdBuilder\Schema;
+use DMT\XsdBuilder\Types\DataType;
 use DOMDocument;
 use DOMElement;
 
-class SimpleType implements TypeNode
+class SimpleType implements Type
 {
     public function __construct(
-        public readonly string|null $name,
-        public readonly DataType|null $type,
-        public readonly Restriction|null $restriction = null
+        private readonly string|null $name,
+        private readonly DataType|null $type,
+        private readonly Restriction|null $restriction = null
     ) {
+    }
+
+    /** @inheritDoc */
+    public function getNodeName(): string|null
+    {
+        return $this->name;
     }
 
     /** @inheritDoc */
