@@ -13,7 +13,7 @@ use DOMException;
 class AttributeNode implements Node
 {
     public function __construct(
-        private readonly string  $name,
+        private readonly string $name,
         private readonly DataType|SimpleType|string $type,
         private readonly string|null $default = null,
         private readonly UseType|null $use = null
@@ -23,7 +23,7 @@ class AttributeNode implements Node
     /** @throws DOMException */
     public function toNode(DOMDocument $document = new DOMDocument()): DOMElement
     {
-        $attribute = $document->createElementNS(Schema::namespace, 'attribute');
+        $attribute = $document->createElementNS(Schema::NAMESPACE, 'attribute');
         $attribute->setAttribute('name', $this->name);
 
         if ($this->type instanceof SimpleType) {

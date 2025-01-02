@@ -24,7 +24,7 @@ class AttributeFactory implements Factory
     ) {
     }
 
-    public static function create(string $name, mixed $type, SchemaType $schemaType = null): Factory
+    public static function create(string $name, mixed $type, SchemaType $schemaType = null): self
     {
         try {
             return new self(
@@ -32,12 +32,12 @@ class AttributeFactory implements Factory
                 is_string($type) ? DataType::from($type) : $type,
                 $schemaType ?? SchemaType::VenetianBlind
             );
-        } catch (TypeError|ValueError) {
+        } catch (TypeError | ValueError) {
             throw new InvalidArgumentException('Invalid type for attribute');
         }
     }
 
-    public function setDefault(mixed $default): AttributeFactory
+    public function setDefault(mixed $default): self
     {
         if (!is_scalar($default)) {
             throw new InvalidArgumentException('Default value must be a boolean, integer, float or string');
@@ -52,7 +52,7 @@ class AttributeFactory implements Factory
         return $this;
     }
 
-    public function setUse(UseType|string $use): AttributeFactory
+    public function setUse(UseType|string $use): self
     {
         if (!$use instanceof UseType) {
             $use = UseType::from($use);

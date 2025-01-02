@@ -27,7 +27,7 @@ class SimpleType implements Type
     /** @inheritDoc */
     public function toNode(DOMDocument $document = new DOMDocument()): DOMElement
     {
-        $type = $document->createElementNS(Schema::namespace, 'simpleType');
+        $type = $document->createElementNS(Schema::NAMESPACE, 'simpleType');
 
         if ($this->name) {
             $type->setAttribute('name', $this->name);

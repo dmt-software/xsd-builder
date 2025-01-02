@@ -13,11 +13,11 @@ use InvalidArgumentException;
 class ElementNode implements Node
 {
     public function __construct(
-        private readonly string               $name,
+        private readonly string $name,
         private readonly DataType|Type|string $type,
-        private readonly string|null          $minOccurs = null,
-        private readonly string|null          $maxOccurs = null,
-        private readonly string|null          $default = null
+        private readonly string|null $minOccurs = null,
+        private readonly string|null $maxOccurs = null,
+        private readonly string|null $default = null
     ) {
         if ($default !== null && $type instanceof ComplexType) {
             throw new InvalidArgumentException('Can not set default for ComplexType');
@@ -27,7 +27,7 @@ class ElementNode implements Node
     /** @throws DOMException */
     public function toNode(DOMDocument $document = new DOMDocument()): DOMElement
     {
-        $element = $document->createElementNS(Schema::namespace, 'element');
+        $element = $document->createElementNS(Schema::NAMESPACE, 'element');
         $element->setAttribute('name', $this->name);
 
         $type = $this->type instanceof DataType ? $this->type->type() : $this->type;

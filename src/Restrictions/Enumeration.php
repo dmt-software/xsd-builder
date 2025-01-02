@@ -31,7 +31,7 @@ class Enumeration implements Restriction
     /** @inheritDoc */
     public function toNode(DOMDocument $document = new DOMDocument()): DOMElement
     {
-        $restriction = $document->createElementNS(Schema::namespace, 'restriction');
+        $restriction = $document->createElementNS(Schema::NAMESPACE, 'restriction');
         $restriction->setAttribute('base', $this->base->type());
 
         array_map(fn(mixed $value) => $this->addEnumerationForValue($restriction, (string)$value), $this->values);
@@ -41,7 +41,7 @@ class Enumeration implements Restriction
 
     private function addEnumerationForValue(DOMElement $restriction, string $value): void
     {
-        $enumeration = $restriction->ownerDocument->createElementNS(Schema::namespace, 'enumeration');
+        $enumeration = $restriction->ownerDocument->createElementNS(Schema::NAMESPACE, 'enumeration');
         $enumeration->setAttribute('value', $value);
 
         $restriction->appendChild($enumeration);

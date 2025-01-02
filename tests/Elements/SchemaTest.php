@@ -50,7 +50,7 @@ class SchemaTest extends TestCase
     }
 
     #[RunInSeparateProcess]
-    public function testInvalidSchema(): void
+    public function testSchemaIsInvalid(): void
     {
         libxml_use_internal_errors(true);
 

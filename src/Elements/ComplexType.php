@@ -52,14 +52,14 @@ class ComplexType implements Type
      */
     public function toNode(DOMDocument $document = new DOMDocument()): DOMElement
     {
-        $type = $document->createElementNS(Schema::namespace, 'complexType');
+        $type = $document->createElementNS(Schema::NAMESPACE, 'complexType');
 
         if ($this->name !== null) {
             $type->setAttribute('name', $this->name);
         }
 
         if ($this->elements) {
-            $container = $document->createElementNS(Schema::namespace, $this->list->value);
+            $container = $document->createElementNS(Schema::NAMESPACE, $this->list->value);
 
             foreach ($this->elements as $element) {
                 $container->appendChild($element->toNode($container->ownerDocument));

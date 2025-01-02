@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class Schema
 {
-    public const namespace = 'http://www.w3.org/2001/XMLSchema';
+    public const NAMESPACE = 'http://www.w3.org/2001/XMLSchema';
 
     /** @var array<int, Type> */
     private array $types = [];
@@ -45,10 +45,10 @@ class Schema
         $schema = $this->document->firstChild;
 
         if (!$schema) {
-            $schema = $this->document->appendChild($this->document->createElementNS(self::namespace, 'xs:schema'));
+            $schema = $this->document->appendChild($this->document->createElementNS(self::NAMESPACE, 'xs:schema'));
         }
 
-        if ($schema->localName !== 'schema' || $schema->namespaceURI !== self::namespace) {
+        if ($schema->localName !== 'schema' || $schema->namespaceURI !== self::NAMESPACE) {
             throw new InvalidArgumentException('Invalid schema provided');
         }
 

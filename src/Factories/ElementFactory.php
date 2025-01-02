@@ -15,12 +15,12 @@ use ValueError;
 class ElementFactory implements Factory
 {
     public function __construct(
-        private readonly string        $name,
+        private readonly string $name,
         private readonly Type|DataType $type,
-        private readonly SchemaType    $schemaType = SchemaType::VenetianBlind,
-        private string|null            $minOccurs = null,
-        private string|null            $maxOccurs = null,
-        private mixed                  $default = null
+        private readonly SchemaType $schemaType = SchemaType::VenetianBlind,
+        private string|null $minOccurs = null,
+        private string|null $maxOccurs = null,
+        private mixed $default = null
     ) {
     }
 
@@ -35,7 +35,7 @@ class ElementFactory implements Factory
                 is_string($type) ? DataType::from($type) : $type,
                 $schemaType ?? SchemaType::VenetianBlind
             );
-        } catch (TypeError|ValueError) {
+        } catch (TypeError | ValueError) {
             throw new InvalidArgumentException('Unknown type for element');
         }
     }

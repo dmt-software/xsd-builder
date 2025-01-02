@@ -27,10 +27,10 @@ class Expression implements Restriction
     /** @inheritDoc */
     public function toNode(DOMDocument $document = new DOMDocument()): DOMElement
     {
-        $pattern = $document->createElementNS(Schema::namespace, 'pattern');
+        $pattern = $document->createElementNS(Schema::NAMESPACE, 'pattern');
         $pattern->setAttribute('value', $this->expression);
 
-        $restriction = $document->createElementNS(Schema::namespace, 'restriction');
+        $restriction = $document->createElementNS(Schema::NAMESPACE, 'restriction');
         $restriction->setAttribute('base', $this->base->type());
         $restriction->appendChild($pattern);
 
