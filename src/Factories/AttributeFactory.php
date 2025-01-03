@@ -6,6 +6,7 @@ namespace DMT\XsdBuilder\Factories;
 
 use DMT\XsdBuilder\Elements\AttributeNode;
 use DMT\XsdBuilder\Elements\SimpleType;
+use DMT\XsdBuilder\Elements\Type;
 use DMT\XsdBuilder\Types\DataType;
 use DMT\XsdBuilder\Types\SchemaType;
 use DMT\XsdBuilder\Types\UseType;
@@ -54,8 +55,12 @@ class AttributeFactory implements Factory
 
     public function setUse(UseType|string $use): self
     {
-        if (!$use instanceof UseType) {
-            $use = UseType::from($use);
+        try {
+            if (!$use instanceof UseType) {
+                $use = UseType::from($use);
+            }
+        } catch (ValueError) {
+            throw new InvalidArgumentException('Invalid use type for attribute');
         }
 
         $this->use = $use;
@@ -68,11 +73,18 @@ class AttributeFactory implements Factory
      */
     public function build(): AttributeNode
     {
-        $type = match ($this->schemaType) {
-            SchemaType::VenetianBlind => $this->type->getNodeName(),
-            SchemaType::RussianDoll, SchemaType::SalamiSlice => $this->type,
-        };
+        if ($this->type instanceof Type) {
+            $type = match ($this->schemaType) {
+                SchemaType::VenetianBlind => $this->type->getNodeName(),
+                SchemaType::RussianDoll, SchemaType::SalamiSlice => $this->type,
+            };
+        }
 
-        return new AttributeNode($this->name, $type, $this->default, $this->use);
+        return new AttributeNode(
+            $this->name,
+            $type ?? $this->type,
+            $this->default,
+            $this->use
+        );
     }
 }

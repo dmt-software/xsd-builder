@@ -17,7 +17,7 @@ class ComplexType implements Type
 
     public function __construct(
         private readonly string|null $name = null,
-        private readonly ListType $list = ListType::Sequence
+        private readonly ListType $type = ListType::Sequence
     ) {
     }
 
@@ -59,7 +59,7 @@ class ComplexType implements Type
         }
 
         if ($this->elements) {
-            $container = $document->createElementNS(Schema::NAMESPACE, $this->list->value);
+            $container = $document->createElementNS(Schema::NAMESPACE, $this->type->value);
 
             foreach ($this->elements as $element) {
                 $container->appendChild($element->toNode($container->ownerDocument));

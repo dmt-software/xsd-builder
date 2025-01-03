@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\Test\XsdBuilder\Factories;
 
 use DMT\XsdBuilder\Elements\ComplexType;
@@ -66,16 +68,21 @@ class ElementFactoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $element = ElementFactory::create('test', $arguments['type'])
-            ->setMaxOccurs($arguments['maxOccurs'] ?? 1)
-            ->setDefault($arguments['default'] ?? '0')
-            ->build();
+            ->setMaxOccurs($arguments['maxOccurs'] ?? 1);
+
+        if ($arguments['default'] ?? false) {
+            $element->setDefault($arguments['default']);
+        }
+
+        $element->build();
     }
 
     public static function provideInvalidData(): array
     {
         return [
             'invalid type' => [['type' => 'unknown']],
-            'invalid maxOccurs' => [['maxOccurs' => 'restricted']],
+            'invalid maxOccurs' => [['type' => 'string', 'maxOccurs' => 'restricted']],
+            'invalid default value' => [['type' => 'string', 'default' => [1, 2]]],
             'default for complexType' => [['type' =>  new ComplexType(), 'default' => 'value']],
         ];
     }
