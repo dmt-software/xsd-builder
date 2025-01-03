@@ -8,7 +8,7 @@ use DMT\XsdBuilder\Types\ListType;
 use DOMDocument;
 use DOMElement;
 
-class ComplexType implements Type
+class ComplexType implements Type, ParentType
 {
     /** @var array<int, Type> */
     private array $elements = [];

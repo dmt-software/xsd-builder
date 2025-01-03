@@ -49,7 +49,7 @@ class SimpleTypeFactory implements Factory
     /**
      * @inheritDoc
      */
-    public function build(): Type|Node
+    public function build(): SimpleType
     {
         $name = match ($this->schemaType) {
             SchemaType::VenetianBlind => $this->name,

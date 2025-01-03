@@ -43,7 +43,7 @@ class ComplexTypeFactory implements Factory
     /**
      * @inheritDoc
      */
-    public function build(): Type|Node
+    public function build(): ComplexType
     {
         $name = match ($this->schemaType) {
             SchemaType::VenetianBlind => $this->name,

@@ -10,11 +10,11 @@ use DOMElement;
 use DOMException;
 use InvalidArgumentException;
 
-class ElementNode implements Node
+class ElementNode implements Node, ParentNode
 {
     public function __construct(
         private readonly string $name,
-        private readonly DataType|Type|string $type,
+        private DataType|Type|string $type,
         private readonly string|null $minOccurs = null,
         private readonly string|null $maxOccurs = null,
         private readonly string|null $default = null
@@ -22,6 +22,20 @@ class ElementNode implements Node
         if ($default !== null && $type instanceof ComplexType) {
             throw new InvalidArgumentException('Can not set default for ComplexType');
         }
+    }
+
+    public function addSimpleType(SimpleType $simpleType): self
+    {
+        $this->type = $simpleType;
+
+        return $this;
+    }
+
+    public function addComplexType(ComplexType $complexType): self
+    {
+        $this->type = $complexType;
+
+        return $this;
     }
 
     /** @throws DOMException */

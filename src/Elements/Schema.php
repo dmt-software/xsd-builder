@@ -6,7 +6,7 @@ use DOMDocument;
 use DOMException;
 use InvalidArgumentException;
 
-class Schema
+class Schema implements ParentType, ParentNode
 {
     public const NAMESPACE = 'http://www.w3.org/2001/XMLSchema';
 
@@ -15,32 +15,40 @@ class Schema
     /** @var array<int, Node> */
     private array $nodes = [];
 
-    public function __construct(
-        private DOMDocument $document
-    ) {
+    public function __construct(private DOMDocument $document)
+    {
     }
 
-    public function getDocument(): DOMDocument
+    public function addSimpleType(SimpleType $simpleType): self
     {
-        return $this->document;
-    }
-
-    public function addType(Type $type): self
-    {
-        $this->types[] = $type;
+        $this->types[] = $simpleType;
 
         return $this;
     }
 
-    public function addNode(Node $node): self
+    public function addComplexType(ComplexType $complexType): self
     {
-        $this->nodes[] = $node;
+        $this->types[] = $complexType;
+
+        return $this;
+    }
+
+    public function addAttribute(AttributeNode $attribute): self
+    {
+        $this->nodes[] = $attribute;
+
+        return $this;
+    }
+
+    public function addElement(ElementNode $element): self
+    {
+        $this->nodes[] = $element;
 
         return $this;
     }
 
     /** @throws DOMException */
-    public function renderSchema(): void
+    public function renderSchema(): DOMDocument
     {
         $schema = $this->document->firstChild;
 
@@ -63,5 +71,7 @@ class Schema
         if (!$this->document->schemaValidate(__DIR__ . '/../../res/schema.xsd')) {
             throw new DOMException('Invalid XML schema');
         }
+
+        return $this->document;
     }
 }
