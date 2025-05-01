@@ -2,60 +2,54 @@
 
 namespace DMT\XsdBuilder\Builders;
 
-use DMT\XsdBuilder\Elements\ParentNode;
 use DMT\XsdBuilder\Elements\ParentType;
 use DMT\XsdBuilder\Elements\Schema;
 use DMT\XsdBuilder\Factories\AttributeFactory;
 use DMT\XsdBuilder\Factories\ComplexTypeFactory;
 use DMT\XsdBuilder\Factories\ElementFactory;
 use DMT\XsdBuilder\Factories\SimpleTypeFactory;
+use DMT\XsdBuilder\Restrictions\Base;
 use DMT\XsdBuilder\Restrictions\Restriction;
+use DMT\XsdBuilder\Types\ListType;
+use DOMDocument;
 
 class VenetianBlind implements Builder
 {
-    private Schema $schema;
+    private ParentType $current;
+
+    public function __construct(
+        private readonly Schema $schema,
+        private readonly ListType $listType = ListType::Sequence,
+    ) {
+        $this->current = $schema;
+    }
 
     /**
      * @inheritDoc
      */
-    public function addSimpleType(ParentNode $parent, string $name, mixed $type, Restriction $restriction = null): ParentNode
+    public function addSimpleType(string $name, mixed $type, Restriction $restriction = null): void
     {
-        if ($parent instanceof Schema) {
-            $this->schema = $parent;
-        }
-
         $factory = SimpleTypeFactory::create($name, $type);
+        $factory->setRestriction($restriction ?? new Base($type));
 
-        if ($restriction) {
-            $factory->setRestriction($restriction);
-        }
-
-        return $this->schema->addSimpleType($factory->build());
+        $this->schema->addSimpleType($factory->build());
     }
 
     /**
      * @inheritDoc
      */
-    public function addComplexType(ParentNode $parent, string $name, mixed $type): ParentType
+    public function addComplexType(string $name, mixed $type = null): void
     {
-        if ($parent instanceof Schema) {
-            $this->schema = $parent;
-        }
+        $this->current = ComplexTypeFactory::create($name, $type ?? $this->listType)->build();
 
-        $this->schema->addComplexType($complexType = ComplexTypeFactory::create($name, $type)->build());
-
-        return $complexType;
+        $this->schema->addComplexType($this->current);
     }
 
     /**
      * @inheritDoc
      */
-    public function addAttribute(ParentType $parent, string $name, mixed $type, array $attributes = []): ParentType
+    public function addAttribute(string $name, mixed $type, array $attributes = []): void
     {
-        if ($parent instanceof Schema) {
-            $this->schema = $parent;
-        }
-
         $factory = AttributeFactory::create($name, $type);
 
         if (array_key_exists('use', $attributes)) {
@@ -65,18 +59,14 @@ class VenetianBlind implements Builder
             $factory->setDefault($attributes['default']);
         }
 
-        return $parent->addAttribute($factory->build());
+        $this->current->addAttribute($factory->build());
     }
 
     /**
      * @inheritDoc
      */
-    public function addElement(ParentType $parent, string $name, mixed $type, array $attributes = []): ParentType
+    public function addElement(string $name, mixed $type, array $attributes = []): void
     {
-        if ($parent instanceof Schema) {
-            $this->schema = $parent;
-        }
-
         $factory = ElementFactory::create($name, $type);
 
         if (array_key_exists('minOccurs', $attributes)) {
@@ -89,6 +79,14 @@ class VenetianBlind implements Builder
             $factory->setDefault($attributes['default']);
         }
 
-        return $parent->addElement($factory->build());
+        $this->current->addElement($factory->build());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function build(): DOMDocument
+    {
+        return $this->schema->renderSchema();
     }
 }

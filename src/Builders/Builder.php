@@ -2,9 +2,10 @@
 
 namespace DMT\XsdBuilder\Builders;
 
-use DMT\XsdBuilder\Elements\ParentNode;
-use DMT\XsdBuilder\Elements\ParentType;
 use DMT\XsdBuilder\Restrictions\Restriction;
+use DMT\XsdBuilder\Types\ListType;
+use DOMDocument;
+use DOMException;
 use InvalidArgumentException;
 
 interface Builder
@@ -14,26 +15,33 @@ interface Builder
      *
      * @throws InvalidArgumentException
      */
-    public function addAttribute(ParentType $parent, string $name, mixed $type, array $attributes = []): ParentType;
+    public function addAttribute(string $name, mixed $type, array $attributes = []): void;
 
     /**
      * Add a complexType to the schema or element.
      *
      * @throws InvalidArgumentException
      */
-    public function addComplexType(ParentNode $parent, string $name, mixed $type): ParentType;
+    public function addComplexType(string $name, mixed $type = null): void;
 
     /**
      * Add an element to the complexType or schema.
      *
      * @throws InvalidArgumentException
      */
-    public function addElement(ParentType $parent, string $name, mixed $type, array $attributes = []): ParentType;
+    public function addElement(string $name, mixed $type, array $attributes = []): void;
 
     /**
      * Add a simpleType to the schema or element.
      *
      * @throws InvalidArgumentException
      */
-    public function addSimpleType(ParentNode $parent, string $name, mixed $type, Restriction $restriction = null): ParentNode;
+    public function addSimpleType(string $name, mixed $type, Restriction $restriction = null): void;
+
+    /**
+     * Render en build schema.
+     *
+     * @throws DOMException
+     */
+    public function build(): DOMDocument;
 }

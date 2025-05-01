@@ -3,8 +3,6 @@
 namespace DMT\XsdBuilder;
 
 use DMT\XsdBuilder\Builders\Builder;
-use DMT\XsdBuilder\Builders\VenetianBlind;
-use DMT\XsdBuilder\Elements\ComplexType;
 use DMT\XsdBuilder\Elements\ParentNode;
 use DMT\XsdBuilder\Elements\ParentType;
 use DMT\XsdBuilder\Elements\Schema;
@@ -12,19 +10,14 @@ use DMT\XsdBuilder\Elements\Type;
 use DMT\XsdBuilder\Restrictions\Restriction;
 use DMT\XsdBuilder\Types\ListType;
 use DOMDocument;
+use DOMException;
 use InvalidArgumentException;
 
-class XsdBuilder
+class XsdBuilder implements Builder
 {
-    private Schema $schema;
-    private ParentNode|ParentType|null $current = null;
-
     public function __construct(
-        private readonly Builder $builder = new VenetianBlind(),
-        private readonly ListType $listType = ListType::Sequence,
-        private DOMDocument $document = new DOMDocument(),
+        private readonly Builder $builder,
     ) {
-        $this->schema = $this->current = new Schema($this->document);
     }
 
     /**
@@ -38,20 +31,20 @@ class XsdBuilder
      */
     public function addSimpleType(string $name, mixed $type, Restriction|null $restriction = null): void
     {
-        $this->current = $this->builder->addSimpleType($this->current, $name, $type, $restriction);
+        $this->builder->addSimpleType($name, $type, $restriction);
     }
 
     /**
      * Add complex type to schema or current element.
      *
      * @param string $name The name of the complex type.
-     * @param ListType|null $type The container type of the complex type [sequence|all].
+     * @param ListType|string|null $type The container type of the complex type [sequence|all].
      *
      * @throws InvalidArgumentException
      */
-    public function addComplexType(string $name, ListType $type = null): void
+    public function addComplexType(string $name, mixed $type = null): void
     {
-        $this->current = $this->builder->addComplexType($this->current, $name, $type ?? $this->listType);
+        $this->builder->addComplexType($name, $type);
     }
 
     /**
@@ -63,9 +56,9 @@ class XsdBuilder
      *
      * @throws InvalidArgumentException
      */
-    public function addElement(string $name, Type|string $type, array $attributes = []): void
+    public function addElement(string $name, mixed $type, array $attributes = []): void
     {
-        $this->current = $this->builder->addElement($this->current, $name, $type, $attributes);
+        $this->builder->addElement($name, $type, $attributes);
     }
 
     /**
@@ -77,13 +70,18 @@ class XsdBuilder
      *
      * @throws InvalidArgumentException
      */
-    public function addAttribute(string $name, Type|string $type, array $attributes = []): void
+    public function addAttribute(string $name, mixed $type, array $attributes = []): void
     {
-        $this->current = $this->builder->addAttribute($this->current, $name, $type, $attributes);
+        $this->builder->addAttribute($name, $type, $attributes);
     }
 
+    /**
+     * Render and return schema.
+     *
+     * @throws DOMException
+     */
     public function build(): DOMDocument
     {
-        return $this->schema->renderSchema();
+        return $this->builder->build();
     }
 }
