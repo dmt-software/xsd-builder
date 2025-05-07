@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder\Builders;
 
 use DMT\XsdBuilder\Restrictions\Restriction;
-use DMT\XsdBuilder\Types\ListType;
 use DOMDocument;
 use DOMException;
 use InvalidArgumentException;

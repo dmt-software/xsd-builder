@@ -6,7 +6,7 @@ namespace DMT\XsdBuilder\Types;
 
 enum SchemaType
 {
-    case RussianDoll;
-    case SalamiSlice;
+//    case RussianDoll;
+//    case SalamiSlice;
     case VenetianBlind;
 }

@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder;
 
 use DMT\XsdBuilder\Builders\Builder;
-use DMT\XsdBuilder\Elements\ParentNode;
-use DMT\XsdBuilder\Elements\ParentType;
-use DMT\XsdBuilder\Elements\Schema;
 use DMT\XsdBuilder\Elements\Type;
 use DMT\XsdBuilder\Restrictions\Restriction;
 use DMT\XsdBuilder\Types\ListType;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder\Restrictions;
 
 use DMT\XsdBuilder\Elements\Schema;

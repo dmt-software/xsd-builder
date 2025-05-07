@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder\Builders;
 
 use DMT\XsdBuilder\Elements\ParentType;

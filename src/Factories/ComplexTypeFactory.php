@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder\Factories;
 
 use DMT\XsdBuilder\Elements\ComplexType;

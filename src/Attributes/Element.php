@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder\Attributes;
 
 use Attribute;
@@ -10,17 +12,15 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 #[NamedArgumentConstructor]
 class Element extends Node
 {
-    public null|string $default = null;
-
     /**
      * @template T
      * @param null|string|class-string<T>|DataType $type
      */
     public function __construct(
-        null|string $name = null,
-        null|string|DataType $type = null,
+        string|null $name = null,
+        string|DataType|SimpleType|null $type = null,
         public int $minOccurs = 1,
-        public int $maxOccurs = 1,
+        public int|null $maxOccurs = null,
         bool|float|int|string $default = null
     ) {
         parent::__construct($name, $type, $default);

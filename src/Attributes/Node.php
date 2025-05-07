@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DMT\XsdBuilder\Attributes;
 
 use DMT\XsdBuilder\Types\DataType;
@@ -10,11 +12,11 @@ abstract class Node
 
     /**
      * @template T
-     * @param null|string|class-string<T>|DataType $type
+     * @param null|string|class-string<T>|DataType|SimpleType $type
      */
     public function __construct(
         public null|string $name = null,
-        public null|string|DataType $type = null,
+        public null|string|DataType|SimpleType $type = null,
         bool|float|int|string $default = null
     ) {
         $this->default = match (gettype($default)) {
